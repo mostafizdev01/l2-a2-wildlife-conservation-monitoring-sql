@@ -57,6 +57,14 @@ INSERT INTO sightings (ranger_id, species_id, sighting_time, location, notes) VA
 (2, 5, '2025-05-25', 'East Zone - Tall Trees', 'Golden Langur observed eating leaves.');
 
 
+----PostgreSQL Wildlife Conservation Monitoring Problems Solutions...
+
+-- Problem no 01:-
+INSERT into rangers (name, region)
+VALUES ('Derek Fox', 'Coastal Plains');
+
+
+
 SELECT * FROM  rangers;
 SELECT * FROM  species;
 SELECT * FROM  sightings;
