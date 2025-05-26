@@ -75,7 +75,7 @@ CREATE Table sightings (
     location TEXT NOT NULL,
     notes text
 );
-
+DROP TABLE sightings;
 -- insert data on sightings table
 INSERT INTO
     sightings (
@@ -87,7 +87,7 @@ INSERT INTO
     )
 VALUES (
         1,
-        1,
+        NULL,
         '2025-05-20',
         'North Zone - Cliffside',
         'Shadow Leopard spotted near cave entrance.'
@@ -158,7 +158,7 @@ GROUP BY
 ORDER BY total_sightings;
 
 -- Problem no 05:-
-SELECT species.common_name, species.scientific_name
+SELECT species.common_name
 FROM species
     LEFT JOIN sightings ON species.species_id = sightings.species_id
 WHERE
@@ -178,28 +178,31 @@ UPDATE species
 SET
     conservation_status = 'Historic'
 WHERE
-    discovery_date < '1800-01-01';
-
+      extract(
+        YEAR
+        FROM discovery_date
+    ) < '1800';
 -- Problem no 08:-
-SELECT
-    sighting_id,
-    sighting_time,
-    CASE
-        WHEN EXTRACT(
-            HOUR
-            FROM sighting_time
-        ) < 12 THEN 'Morning'
-        WHEN EXTRACT(
-            HOUR
-            FROM sighting_time
-        ) >= 12
-        AND EXTRACT(
-            HOUR
-            FROM sighting_time
-        ) < 17 THEN 'Afternoon'
-        ELSE 'Evening'
-    END AS time_of_day
-FROM sightings;
+CREATE OR REPLACE FUNCTION check_time(full_timestamp TIMESTAMP)
+RETURNS TEXT
+LANGUAGE plpgsql
+AS
+$$
+BEGIN
+    IF EXTRACT(HOUR FROM full_timestamp) < 12 THEN
+        RETURN 'Morning';
+    ELSIF EXTRACT(HOUR FROM full_timestamp) < 17 THEN
+        RETURN 'Afternoon';
+    ELSE
+        RETURN 'Evening';
+    END IF;
+END;
+$$;
+
+
+SELECT to_char( TIMESTAMP '2024-05-18 18:30:00', 'HH' );
+
+SELECT sighting_id, check_time(sighting_time) FROM sightings;
 
 
 -- Problem no 09:-
@@ -208,9 +211,6 @@ WHERE ranger_id NOT IN (
   SELECT DISTINCT ranger_id FROM sightings
 );
 
-
 SELECT * FROM rangers;
-
 SELECT * FROM species;
-
 SELECT * FROM sightings;
