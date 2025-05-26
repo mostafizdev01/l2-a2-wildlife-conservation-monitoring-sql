@@ -138,18 +138,22 @@ VALUES (
 ----PostgreSQL Wildlife Conservation Monitoring Problems Solutions...
 
 -- Problem no 01:-
+
 INSERT into
     rangers (name, region)
 VALUES ('Derek Fox', 'Coastal Plains');
 
 -- Problem no 02:-
+
 SELECT COUNT(DISTINCT species_id) AS unique_species_count
 FROM sightings;
 
 -- Problem no 03:-
+
 SELECT * FROM sightings WHERE location ILIKE '%pass%'
 
 -- Problem no 04:-
+
 SELECT rangers.name, COUNT(sightings.sighting_id) AS total_sightings
 FROM rangers
     LEFT JOIN sightings ON rangers.ranger_id = sightings.sighting_id
@@ -158,6 +162,7 @@ GROUP BY
 ORDER BY total_sightings;
 
 -- Problem no 05:-
+
 SELECT species.common_name
 FROM species
     LEFT JOIN sightings ON species.species_id = sightings.species_id
@@ -165,6 +170,7 @@ WHERE
     sightings.species_id IS NULL;
 
 -- Problem no 06:-
+
 SELECT sp.common_name, s.sighting_time, r.name
 FROM
     sightings s
@@ -174,6 +180,7 @@ ORDER BY s.sighting_time DESC
 LIMIT 2;
 
 -- Problem no 07:-
+
 UPDATE species
 SET
     conservation_status = 'Historic'
@@ -182,7 +189,9 @@ WHERE
         YEAR
         FROM discovery_date
     ) < '1800';
+
 -- Problem no 08:-
+
 CREATE OR REPLACE FUNCTION check_time(full_timestamp TIMESTAMP)
 RETURNS TEXT
 LANGUAGE plpgsql
@@ -206,6 +215,7 @@ SELECT sighting_id, check_time(sighting_time) FROM sightings;
 
 
 -- Problem no 09:-
+
 DELETE FROM rangers
 WHERE ranger_id NOT IN (
   SELECT DISTINCT ranger_id FROM sightings
